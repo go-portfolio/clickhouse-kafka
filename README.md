@@ -1,8 +1,12 @@
 # Проект добавления sql-представлений в kafka для clickhouse в продюсере и считывания их в консумере с помощью sql (пока делается)
 
+## Общая схема работы такова:
+Producer → Kafka (topic=events) → ClickHouse Kafka Engine (kafka_input)
+→ Materialized View → MergeTree (events) → Consumer
+
+
 ## Запуск контейнеров
 docker compose up --build
-
 
 
 ## Сборка образа продюсера
