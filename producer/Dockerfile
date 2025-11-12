@@ -11,4 +11,4 @@ COPY . .
 
 RUN go build -o producer main.go
 
-CMD ["./producer"]
+

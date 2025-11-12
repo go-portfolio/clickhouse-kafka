@@ -26,12 +26,6 @@ services:
     networks:
       - clickhouse-kafka_clickhouse_network
 
-
-
-
-
-
-
   clickhouse:
     image: yandex/clickhouse-server:latest
     ports:

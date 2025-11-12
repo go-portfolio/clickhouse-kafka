@@ -16,5 +16,3 @@ COPY . .
 # Build the Go app
 RUN go build -o consumer main.go
 
-# Command to run the executable
-CMD ["./consumer"]
