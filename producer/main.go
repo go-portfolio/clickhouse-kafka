@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"github.com/Shopify/sarama"
 	"log"
-	"os"
 	"time"
 	"encoding/json"
 )
 
 func main() {
 	// Настройка Kafka
-	kafkaBroker := "kafka:9093" // Брокер Kafka, указанный в Docker Compose
+	kafkaBroker := "kafka:9093" // Брокер go Kafka, указанный в Docker Compose
 	topic := "data_topic"        // Топик для отправки сообщений
 
 	// Создание конфигурации для продюсера
