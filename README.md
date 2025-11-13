@@ -5,10 +5,67 @@
 Сообщения приходят в Kafka, затем потребляются и сохраняются в основной таблице my_table, одновременно создаются события в таблице events.
 
 ## Структура проекта
-Producer  → Kafka (topic=events) → Consumer → Kafka (topic=events) → ClickHouse Kafka Engine (kafka_input)
-→ Materialized View → MergeTree (events) → Events Watcher (события ClickHouse)
+```
+Producer → Kafka (topic=data_topic)
+          ↓
+          Consumer (вставляет в my_table и создаёт запись в events)
+          
+Kafka Engine (kafka_input) ← читается напрямую из Kafka
+          ↓
+Materialized View kafka_to_events
+          ↓
+MergeTree (events) ← теперь содержит все события
+          ↓
+Events Watcher (наблюдает события ClickHouse)
+```
+```
 
+┌───────────┐
+│ Producer  │
+└─────┬─────┘
+      │ JSON сообщения
+      ▼
+┌──────────────┐
+│ Kafka        │
+│ topic=data_topic │
+└─────┬────────┘
+      │
+      ▼
+┌──────────────┐
+│ Consumer     │
+│ (Go)         │
+│ - my_table   │
+│ - events     │
+└─────┬────────┘
+      │
+      ▼
+┌──────────────┐
+│ ClickHouse   │
+│ Kafka Engine │
+│ kafka_input  │
+└─────┬────────┘
+      │
+      ▼
+┌──────────────┐
+│ Materialized │
+│ View         │
+│ kafka_to_events │
+└─────┬────────┘
+      │
+      ▼
+┌──────────────┐
+│ MergeTree    │
+│ events       │
+└─────┬────────┘
+      │
+      ▼
+┌──────────────┐
+│ Events       │
+│ Watcher      │
+└──────────────┘
+```
 
+## Основные компоненты
 - **producer** – Go-продюсер, который отправляет JSON-сообщения в Kafka-топик `data_topic`.
 - **consumer** – Go-приложение, которое:
   1. Создаёт необходимые таблицы ClickHouse.
@@ -22,7 +79,7 @@ Producer  → Kafka (topic=events) → Consumer → Kafka (topic=events) → Cli
   2. Выводит информацию о новых событиях в консоль или лог.
   3. Позволяет отслеживать, какие записи были добавлены в `my_table` и с какими данными.
   4. Не взаимодействует напрямую с Kafka, работает только с ClickHouse.
-  
+
 ## Сборка и запуск контейнеров
 Сборка
 ```bash
