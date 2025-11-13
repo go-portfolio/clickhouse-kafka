@@ -37,3 +37,7 @@ docker exec -it clickhouse-kafka-producer-1 sh
 ## Подключение tabix к clickhouse
 http://localhost:8124
 ![title](images/login.png)
+
+## UI для Apache Kafka
+http://localhost:8080/
+![title](images/kafka.png)

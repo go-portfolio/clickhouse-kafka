@@ -26,6 +26,22 @@ services:
     networks:
       - clickhouse-kafka_clickhouse_network
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9093
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    depends_on:
+      - kafka
+      - zookeeper
+    networks:
+      - clickhouse-kafka_clickhouse_network
+
+
   clickhouse:
     image: yandex/clickhouse-server:latest
     ports:
